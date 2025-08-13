@@ -1,0 +1,6 @@
+answerer_task:
+  description: >
+    Answer the question: {topic}
+  expected_output: >
+    A string containing the answer to {topic}
+  agent: answerer
