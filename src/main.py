@@ -10,8 +10,8 @@ if __name__ == "__main__":
     question = sys.argv[1]
 
     inputs = {
-    "topic": question
+    "topic": question,
+    "website_url": "https://terraria.wiki.gg/wiki/Weapons"
 }
     results = LearningCrew().crew().kickoff(inputs=inputs)
     print(results)
-    exit(0)

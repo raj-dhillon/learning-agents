@@ -5,10 +5,18 @@
 #     A string containing the answer to {topic}
 #   agent: answerer
 
+# wiki_scraper_task:
+#   description: >
+#     Scrape the document for all information related and pertinent to {topic}.
+#     Make sure to structure your findings in a human readable manner.
+#   expected_output: >
+#     Report containing all the relevant information related to {topic} in
+#     an easy to read format
+#   agent: wiki_scraper
+
 wiki_scraper_task:
   description: >
-    Scrape the document for all information related and pertinent to {topic}.
-    Make sure to structure your findings in a human readable manner.
+    Extract the information about {topic} from the website at {website_url}:
   expected_output: >
     Report containing all the relevant information related to {topic} in 
     an easy to read format

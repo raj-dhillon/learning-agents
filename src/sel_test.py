@@ -1,15 +1,7 @@
 from crewai_tools import SeleniumScrapingTool
-from src.tools.scraper import selenium_scraper
+from src.tools.scraper import selenium_scraper, analyze_classes
 
-# scraper = SeleniumScrapingTool(
-#     website_url="https://terraria.wiki.gg/wiki/Weapons",
-#     css_element="body"  # the part of the page you want
-# )
-
-# res = scraper._run()
-
+# res = selenium_scraper._run(website_url="https://terraria.wiki.gg/wiki/Muramasa", css_element="body")
 # print(res)
 
-res = selenium_scraper._run()
-
-print(res)
+analyze_classes("https://terraria.wiki.gg/wiki/Muramasa")
