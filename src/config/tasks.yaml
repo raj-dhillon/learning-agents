@@ -5,19 +5,30 @@
 #     A string containing the answer to {topic}
 #   agent: answerer
 
+############ ACTUAL TASKS ##############
 # wiki_scraper_task:
 #   description: >
-#     Scrape the document for all information related and pertinent to {topic}.
-#     Make sure to structure your findings in a human readable manner.
+#     Extract the information about {topic} from the website at {website_url}:
 #   expected_output: >
 #     Report containing all the relevant information related to {topic} in
 #     an easy to read format
 #   agent: wiki_scraper
 
-wiki_scraper_task:
+research_task:
   description: >
-    Extract the information about {topic} from the website at {website_url}:
+    Conduct thorough research about {topic} from the website at {website_url}
   expected_output: >
-    Report containing all the relevant information related to {topic} in 
-    an easy to read format
-  agent: wiki_scraper
+    A comprehensive research document with well-organized sections covering
+    all the relevant aspects of {topic}.
+  agent: researcher_agent
+
+summary_task:
+  description: >
+    Analyze the research and create an unbiased and accurate summary about {topic}
+  expected_output: >
+    A clear, concise, and impactful summary. Ensuring that no important detail
+    is lost while removing unnecessary fluff.
+  agent: summarizer_agent
+  context:
+    - research_task
+  output_file: output/summary.md

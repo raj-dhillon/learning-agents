@@ -7,8 +7,8 @@ from typing import List
 from tools.tools import raj_info
 
 @CrewBase
-class LearningCrew():
-    """Learning crew"""
+class ScrapingCrew():
+    """Scraping crew"""
     agents: List[BaseAgent]
     tasks = List[Task]
 
