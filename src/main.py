@@ -16,7 +16,7 @@ def run_learner_crew(question):
     os.makedirs("output", exist_ok=True)
     inputs = {
         "topic": question,
-        "website_url": "https://leagueoflegends.fandom.com/wiki/Draven"
+        "website_url": "https://hannibal.fandom.com/wiki/Hannibal_Lecter_(TV)"
     }
     results = LearningCrew().crew().kickoff(inputs=inputs)
 

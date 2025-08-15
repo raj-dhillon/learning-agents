@@ -22,6 +22,9 @@
 #     to target specific content on any website.
 #   llm: "openai/gpt-4o-mini"
 
+# css_tag_agent:
+#   role:
+
 researcher_agent:
   role: >
     Expert Researcher
