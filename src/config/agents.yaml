@@ -29,10 +29,11 @@ researcher_agent:
   role: >
     Expert Researcher
   goal: >
-    Find and compile relevant, accurate information related to {topic}.
+    Find and compile thorough, relevant, and accurate information related to {topic}.
   backstory: >
     You are an expert non-biased researcher who specializes in researching accurate and relevant
-    content, which will later be used to craft detailed analysis.
+    content, which will later be used to craft detailed analysis. You don't leave any necessary details
+    out, you ensure your research is thorough and detailed, and handles all aspects of {topic}
   llm: "openai/gpt-4o-mini"
 
 summarizer_agent:

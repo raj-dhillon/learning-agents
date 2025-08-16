@@ -1,5 +1,5 @@
 from crewai_tools import SeleniumScrapingTool
-from src.tools.scraper import selenium_scraper, analyze_classes
+from src.tools.scraper import selenium_scraper, analyze_classes, selenium_bs_scraper
 
 # res = selenium_scraper._run(website_url="https://terraria.wiki.gg/wiki/Muramasa", css_element="body")
 # print(res)
@@ -18,7 +18,31 @@ relevant_classes = [f".{c}" for c in relevant_classes]
 
 # res = selenium_scraper._run(website_url="https://terraria.wiki.gg/wiki/Muramasa", css_element="body", css_selectors=relevant_classes)
 
-res = selenium_scraper._run(website_url="https://godofwar.fandom.com/wiki/Kratos", css_element="body")
-print(res)
+CONTENT_CLASSES = [
+  "articlePage",
+  "mw-parser-output",
+  "toc",
+  "thumb",
+  "thumbcaption",
+  "reference",
+  "page__main",
+  "page-content",
+  "pi-data",
+  "pi-title",
+  "pi-image",
+  "pi-data-label",
+  "pi-data-value",
+  "mw-headline",
+  "mw-redirect",
+  "mw-selflink"
+]
+CONTENT_CLASSES = ["body ." + c for c in CONTENT_CLASSES]
+
+res = selenium_scraper._run(website_url="https://godofwar.fandom.com/wiki/Kratos", css_element="body", css_selectors=CONTENT_CLASSES)
+# res = selenium_scraper(website_url="https://godofwar.fandom.com/wiki/Kratos", css_element="body", css_selectors=CONTENT_CLASSES)
+# res = selenium_bs_scraper(website_url="https://godofwar.fandom.com/wiki/Kratos", css_element="body", css_selectors=CONTENT_CLASSES)
+# print(res)
+with open('kratos_final.txt', 'w') as f:
+    f.write(res)
 
 # analyze_classes("https://godofwar.fandom.com/wiki/Kratos")
