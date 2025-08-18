@@ -1,14 +1,23 @@
+planning_task:
+  description: >
+    Execute the user's will: `{topic}` - by delegating tasks to those most qualified. Parse
+    what the user wants, and give those instruction to your subordinates as strings. 
+    For research the process is: search_manager->scraping_manager->researcher_agent->summarizer_agent
+  expected_output: >
+    Comply with the user's request and provide any requested response.
+  agent: planning_agent
+
 research_task:
   description: >
-    Conduct thorough research about {topic} from all the text files provided
+    Conduct thorough research about the given topic from all the text files provided
   expected_output: >
     A comprehensive research document with well-organized sections covering
-    all the relevant aspects of {topic}.
+    all the relevant aspects of the given topic.
   agent: researcher_agent
 
 search_manager_task:
   description: >
-    Search the web for links related to {topic}. And then pass any relevant links to a scraping_manager.
+    Search the web for links related to the given topic. And then pass any relevant links to a scraping_manager.
     Search for a maximum of 5 links, and pick only up to 3 to pass to the scraping_manager
   expected_output: >
     A list of all the relevant links that need to be scraped.
@@ -16,7 +25,7 @@ search_manager_task:
 
 scraping_manager_task:
   description: >
-    Scrape {website_url} for everything related to {topic}, and after the chunks are stored as separate files,
+    Scrape the given links for everything related to the given topic, and after the chunks are stored as separate files,
     pass on each to a researcher by giving them their respective filename. If the site cannot be scraped due
     to the token limit, skip the site. Create chunks of a size of 2000.
   expected_output: >
@@ -25,7 +34,7 @@ scraping_manager_task:
 
 summary_task:
   description: >
-    Analyze the aggregated research and create an unbiased and accurate summary about {topic}.
+    Analyze the aggregated research and create an unbiased and accurate summary about the given topic.
     If you aren't given any research, return nothing.
   expected_output: >
     A clear, concise, and impactful summary. Ensuring that no important detail

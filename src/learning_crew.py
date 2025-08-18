@@ -11,6 +11,14 @@ class LearningCrew():
     tasks = List[Task]
 
     @agent
+    def planning_agent(self) -> Agent:
+        return Agent(
+            config=self.agents_config['planning_agent'],
+            verbose=True,
+            allow_delegation=True
+        )
+    
+    @agent
     def search_manager(self) -> Agent:
         return Agent(
             config=self.agents_config['search_manager'],
@@ -46,6 +54,12 @@ class LearningCrew():
         )
     
     @task
+    def planning_task(self) -> Task:
+        return Task(
+            config=self.tasks_config['planning_task'],
+        )
+    
+    @task
     def search_manager_task(self) -> Task:
         return Task(
             config=self.tasks_config['search_manager_task'],
@@ -53,28 +67,8 @@ class LearningCrew():
 
     @task
     def scraping_manager_task(self) -> Task:
-        # def orchestrate_research(inputs):
-        #     topic = inputs['topic']
-        #     website_url = inputs['website_url']
-        #     chunk_metadata = scraper_tool_chunk.run(website_url)
-
-        #     research_output = []
-
-        #     for chunk_file in chunk_metadata['chunk_files']:
-        #         mini_crew = Crew(
-        #             agents=[self.researcher_agent()],
-        #             tasks=[self.research_task()],
-        #             process=Process.sequential,
-        #             verbose=False,
-        #         )
-        #         result = mini_crew.kickoff(inputs = {'topic': topic, 'filename': chunk_file})
-        #         research_output.append(result)
-
-        #     return research_output
-
         return Task(
             config=self.tasks_config['scraping_manager_task'],
-            # callback=orchestrate_research
         )
     
     @task
@@ -90,20 +84,22 @@ class LearningCrew():
             output_file="output/summary.md"
         )
     
+    # @crew
+    # def crew(self) -> Crew:
+    #     return Crew(
+    #         agents=self.agents,
+    #         tasks=self.tasks,
+    #         process= Process.sequential,
+    #         verbose=True,
+    #     )
+
     @crew
     def crew(self) -> Crew:
         return Crew(
+            # agents=[self.search_manager(), self.scraping_manager(), self.researcher_agent(), self.summarizer_agent()], 
             agents=self.agents,
+            # tasks=[self.scraping_manager_task(), self.summary_task()],
             tasks=self.tasks,
             process= Process.sequential,
             verbose=True,
         )
-
-    # @crew
-    # def crew(self) -> Crew:
-    #     return Crew(
-    #         agents=[self.scraping_manager(), self.summarizer_agent()],
-    #         tasks=[self.scraping_manager_task(), self.summary_task()],
-    #         process= Process.sequential,
-    #         verbose=True,
-    #     )
