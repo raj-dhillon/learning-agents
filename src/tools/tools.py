@@ -1,6 +1,8 @@
 from crewai.tools import tool
 from tools.scraper import selenium_scraper
+from tools.search import search_web
 import os, uuid
+import tiktoken
 
 
 # Agent tools
@@ -14,7 +16,15 @@ def scraper_tool_chunk(url: str, chunk_size: int = 2000, overlap: int = 200) -> 
     """Splits scraped text into overlapping chunks to preserve context and stores
     as individual text files."""
 
+    token_limit = 10000
+
+    encoding = tiktoken.get_encoding("o200k_base")
+
     full_text = selenium_scraper(website_url=url)
+
+    if len(encoding.encode(full_text)) > token_limit:
+        return f"Did not scrape {url} due to text exceeding token limit."
+
     words = full_text.split()
 
     # make uuid
@@ -66,3 +76,10 @@ def read_all_chunk_files(filename_list: list) -> str:
         return f"Failed to read file: {err}"
 
     return full_text
+
+@tool 
+def search_web_query(query: str, num_results: int = 3):
+    """
+    Searches web for the given query, and returns num_results results
+    """
+    return search_web(query, num_results)

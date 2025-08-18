@@ -1,25 +1,3 @@
-# scraping_manager_task:
-#   description: >
-#     Scrape information related to {topic} from {website_url} which is then stored in chunks.
-#     You receive the following metadata {"uuid": uuid,"num_chunks": n, "chunk_files": [file1name, file2name, etc.]}.
-#     Each chunk file is named in this format `uuid_chunkNum.txt`, going from 0 - (n-1).
-#   expected_output: >
-#     The exact file name for the chunk assigned to the researcher_agent, along with their corresponding chunk
-#     number. Tell them it's the file they need to read from.
-#   agent: scraping_manager
-
-# research_delegation_task:
-#   description: >
-#     You receive the following metadata {"uuid": uuid,"num_chunks": n, "chunk_files": [file1name, file2name, etc.]}.
-#     Each chunk file is named in this format `uuid_chunkNum.txt`, going from 0 - (n-1).
-#     You will create a researcher_agent to handle 1 file each. After all the files have been researched,
-#     you give the output to summarizer.
-#   expected_output: >
-#     Aggregated research from all researcher_agents
-#   agent: scraping_manager
-#   context:
-#     - scraping_manager_task
-
 research_task:
   description: >
     Conduct thorough research about {topic} from all the text files provided
@@ -28,22 +6,19 @@ research_task:
     all the relevant aspects of {topic}.
   agent: researcher_agent
 
-# summary_task:
-#   description: >
-#     Analyze the research and create an unbiased and accurate summary about {topic}
-#   expected_output: >
-#     A clear, concise, and impactful summary. Ensuring that no important detail
-#     is lost while removing unnecessary fluff.
-#   agent: summarizer_agent
-#   context:
-#     - research_task
-#   output_file: output/summary.md
+search_manager_task:
+  description: >
+    Search the web for links related to {topic}. And then pass any relevant links to a scraping_manager.
+    Search for a maximum of 5 links, and pick only up to 3 to pass to the scraping_manager
+  expected_output: >
+    A list of all the relevant links that need to be scraped.
+  agent: search_manager
 
-# tasks.yaml
 scraping_manager_task:
   description: >
     Scrape {website_url} for everything related to {topic}, and after the chunks are stored as separate files,
-    pass on each to a researcher by giving them their respective filename.
+    pass on each to a researcher by giving them their respective filename. If the site cannot be scraped due
+    to the token limit, skip the site. Create chunks of a size of 2000.
   expected_output: >
     A list of all the relevant filenames that need to be researched on.
   agent: scraping_manager
@@ -51,6 +26,7 @@ scraping_manager_task:
 summary_task:
   description: >
     Analyze the aggregated research and create an unbiased and accurate summary about {topic}.
+    If you aren't given any research, return nothing.
   expected_output: >
     A clear, concise, and impactful summary. Ensuring that no important detail
     is lost while removing unnecessary fluff.

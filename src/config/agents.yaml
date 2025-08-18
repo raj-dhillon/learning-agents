@@ -1,3 +1,12 @@
+search_manager:
+  role: >
+    Expert Web Searcher
+  goal: >
+    Search the web for {topic}
+  backstory: >
+    You are an expert searcher who specializes in finding the resources on any topic.
+  llm: "openai/gpt-4o-mini"
+
 scraping_manager:
   role: >
     Expert Scraper and Manager
