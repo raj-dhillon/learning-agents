@@ -1,34 +1,58 @@
-# answerer_task:
+# scraping_manager_task:
 #   description: >
-#     Answer the question: {topic}
+#     Scrape information related to {topic} from {website_url} which is then stored in chunks.
+#     You receive the following metadata {"uuid": uuid,"num_chunks": n, "chunk_files": [file1name, file2name, etc.]}.
+#     Each chunk file is named in this format `uuid_chunkNum.txt`, going from 0 - (n-1).
 #   expected_output: >
-#     A string containing the answer to {topic}
-#   agent: answerer
+#     The exact file name for the chunk assigned to the researcher_agent, along with their corresponding chunk
+#     number. Tell them it's the file they need to read from.
+#   agent: scraping_manager
 
-############ ACTUAL TASKS ##############
-# wiki_scraper_task:
+# research_delegation_task:
 #   description: >
-#     Extract the information about {topic} from the website at {website_url}:
+#     You receive the following metadata {"uuid": uuid,"num_chunks": n, "chunk_files": [file1name, file2name, etc.]}.
+#     Each chunk file is named in this format `uuid_chunkNum.txt`, going from 0 - (n-1).
+#     You will create a researcher_agent to handle 1 file each. After all the files have been researched,
+#     you give the output to summarizer.
 #   expected_output: >
-#     Report containing all the relevant information related to {topic} in
-#     an easy to read format
-#   agent: wiki_scraper
+#     Aggregated research from all researcher_agents
+#   agent: scraping_manager
+#   context:
+#     - scraping_manager_task
 
 research_task:
   description: >
-    Conduct thorough research about {topic} from the website at {website_url}
+    Conduct thorough research about {topic} from all the text files provided
   expected_output: >
     A comprehensive research document with well-organized sections covering
     all the relevant aspects of {topic}.
   agent: researcher_agent
 
+# summary_task:
+#   description: >
+#     Analyze the research and create an unbiased and accurate summary about {topic}
+#   expected_output: >
+#     A clear, concise, and impactful summary. Ensuring that no important detail
+#     is lost while removing unnecessary fluff.
+#   agent: summarizer_agent
+#   context:
+#     - research_task
+#   output_file: output/summary.md
+
+# tasks.yaml
+scraping_manager_task:
+  description: >
+    Scrape {website_url} for everything related to {topic}, and after the chunks are stored as separate files,
+    pass on each to a researcher by giving them their respective filename.
+  expected_output: >
+    A list of all the relevant filenames that need to be researched on.
+  agent: scraping_manager
+
 summary_task:
   description: >
-    Analyze the research and create an unbiased and accurate summary about {topic}
+    Analyze the aggregated research and create an unbiased and accurate summary about {topic}.
   expected_output: >
     A clear, concise, and impactful summary. Ensuring that no important detail
     is lost while removing unnecessary fluff.
   agent: summarizer_agent
-  context:
-    - research_task
   output_file: output/summary.md

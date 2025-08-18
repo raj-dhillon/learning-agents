@@ -4,51 +4,8 @@ from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import StaleElementReferenceException
-from crewai.tools import tool
-from collections import defaultdict
-from bs4 import BeautifulSoup
+import hashlib
 
-# trying to fix duplication
-def selenium_bs_scraper(website_url: str, css_element: str = ".mw-parser-output", css_selectors: list = None):
-    """Gets dynamic page using Selenium, then scrapes with beautifulsoup"""
-    options = Options()
-    options.headless = True
-
-    driver = webdriver.Chrome(
-        service=Service(ChromeDriverManager().install()),
-        options=options
-    )
-
-    driver.get(website_url)
-    driver.implicitly_wait(3)
-
-    # Step 1: Get the static HTML from the browser.
-    page_source = driver.page_source
-    driver.quit()
-
-    # Step 2: Use Beautiful Soup to parse the static HTML.
-    soup = BeautifulSoup(page_source, 'html.parser')
-
-    if css_selectors is None or len(css_selectors) == 0:
-        css_selectors = [css_element]
-
-    all_text = set()
-
-    # Step 3: Find elements and add their text to a set.
-    for selector in css_selectors:
-        elements = soup.select(selector)
-        for el in elements:
-            text = el.get_text(strip=False)
-            if text:
-                all_text.add(text)
-
-    # Join the unique text from the set.
-    content = "\n\n".join(all_text)
-    
-    return content
-
-
-@tool
 def selenium_scraper(website_url: str, css_element: str = ".mw-parser-output", css_selectors: list = None):
     """Scrapes using Selenium"""
 
@@ -80,12 +37,8 @@ def selenium_scraper(website_url: str, css_element: str = ".mw-parser-output", c
 
     for el in elements:
         try:
-            el_id = el.get_attribute("id")
-            fingerprint = None
-            if el_id:
-                fingerprint = el_id
-            else:
-                fingerprint = f"{el.tag_name}_{el.text[:500].strip()}"
+            fingerprint = hashlib.md5(el.text.strip().encode()).hexdigest()
+            
             if not fingerprint or fingerprint in seen_fingerprints:
                 continue
             
